@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
-#define ARR_LENGTH 300
+#define ARR_LENGTH 15000
 
 FILE *file;
 
@@ -35,6 +35,7 @@ int main()
       filecontents_size = i;
       break;
     }
+    printf("%c", filecontents[i]);
   }
 
   char unique_chars[filecontents_size];
@@ -55,7 +56,7 @@ int main()
       unique_chars_count += 1;
     }
   }
-
+  
   int count_twice = 0;
   int count_thrice = 0;
   int pos = 0;

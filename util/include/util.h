@@ -24,34 +24,34 @@ typedef struct
 
 typedef struct
 {
-  Line lines[MAX_LINE_SIZE];
+  Line line[MAX_LINE_SIZE];
   size_t size;
 } FString;
 
-void util_string_init(UString string)
+void util_string_init(UString *string)
 {
-  string.size = 0;
-  string.data = {0};
+  memset(string->data, 0, MAX_STRING_SIZE);
+  string->size = 1;
 }
 
-void util_fstring_init(FString fstring)
+void util_fstring_init(FString *fstring)
 {
-  fstring.size = 0;
+  fstring->size = 0;
 
   for(int i = 0; i < MAX_LINE_SIZE; i++)
   {
-    fstring.line[i].data = {0};
-    fstring.line[i].size = 0;
+    memset(fstring->line[i].data, 0, MAX_STRING_SIZE);
+    fstring->line[i].size = 1;
   }
 }
 
-void util_string_replace(const char *text, UString string)
+void util_string_replace(const char *text, UString *string)
 {
-  string.size = strlen(text);
+  string->size = strlen(text);
 
-  for(int i = 0; i < string.size; i++)
+  for(int i = 0; i < string->size; i++)
   {
-    string.data[i] = text[i];
+    string->data[i] = text[i];
   }
 }
 
@@ -75,16 +75,15 @@ void util_string_copy(char* dest, UString string, size_t count)
   }
 }
 
-void util_fstring_from_file(FILE *file, FString fstring)
+void util_fstring_from_file(FILE *file, FString *fstring)
 {
-  char current_char;
+  char current_char = 0;
   int line_index = 0;
   int char_index = 0;
-  while(current_char = fgetc(file); current_char != EOF)
+  while(current_char != EOF)
   {
     if(line_index > MAX_LINE_SIZE)
     {
-      // todo:// try the macro trick here
       LOG("line_index > MAX_LINE_SIZE\n");
       return;
     }
@@ -93,18 +92,20 @@ void util_fstring_from_file(FILE *file, FString fstring)
       LOG("char_index > MAX_STRING_SIZE\n");
       return;
     }
+
+    current_char = fgetc(file);
+
+    fstring->line[line_index].data[char_index] = current_char;
+    char_index += 1;
     
     if(current_char == '\n')
     {
+      fstring->line[line_index].size = char_index + 1;
       line_index += 1;
       char_index = 0;
     }
-    fstring.line[line_index].data[char_index] = current_char;
-    char_index += 1;
   }
-  // check if this is right
-  fstring.line[line_index].data[char_index] = '\0';
+  fstring->size = line_index + 1;
 }
-
 
 #endif

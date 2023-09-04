@@ -1,14 +1,11 @@
 #include "util.h"
 
+UString string;
+
 int main()
 {
-  UString string;
+  string = util_string_from_file("bad.txt");
 
-  FString fstring;
-
-  FILE *file;
-
-  
-
+  util_string_print(string);
   return 0;
 }

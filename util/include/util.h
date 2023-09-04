@@ -4,108 +4,68 @@
 #include <string.h>
 #include <stdio.h>
 
-#define LOG(x) printf(x)
-
-// because I want my programs to be memory-safe
 #define MAX_STRING_SIZE 10000
-#define MAX_LINE_SIZE 10000
 
 typedef struct
 {
-  char data[MAX_STRING_SIZE];
+  const char* data;
   size_t size;
 } UString;
 
-typedef struct
-{
-  char data[MAX_STRING_SIZE];
-  size_t size;
-} Line;
 
-typedef struct
-{
-  Line line[MAX_LINE_SIZE];
-  size_t size;
-} FString;
+UString util_string_from_cstr(const char* c_str);
+UString util_string_from_file(const char* path_to_file);
 
-void util_string_init(UString *string)
+void util_string_chop_left(UString *string, size_t n);
+
+void util_string_print(UString string);
+
+void util_string_print(UString string)
 {
-  memset(string->data, 0, MAX_STRING_SIZE);
-  string->size = 1;
+  for(size_t i = 0; i < string.size; i++)
+  {
+    printf("%c", string.data[i]);
+  }
+  printf("\n");
 }
 
-void util_fstring_init(FString *fstring)
+UString util_string_from_cstr(const char* c_str)
 {
-  fstring->size = 0;
-
-  for(int i = 0; i < MAX_LINE_SIZE; i++)
-  {
-    memset(fstring->line[i].data, 0, MAX_STRING_SIZE);
-    fstring->line[i].size = 1;
-  }
+  UString string;
+  string.size = strlen(c_str);
+  string.data = c_str;
+  return string;
 }
 
-void util_string_replace(const char *text, UString *string)
+UString util_string_from_file(const char* path_to_file)
 {
-  string->size = strlen(text);
+  FILE *file = fopen(path_to_file, "r");
 
-  for(int i = 0; i < string->size; i++)
-  {
-    string->data[i] = text[i];
-  }
-}
-
-void util_string_copy(char* dest, UString string, size_t count)
-{
-  if(count > string.size)
-  {
-    LOG("count > string.size\n");
-    return;
-  }
-
-  if(count > strlen(dest))
-  {
-    LOG("count > strlen(dest)\n");
-    return;
-  }
-  
-  for(int i = 0; i < count; i++)
-  {
-    dest[i] = string.data[i];
-  }
-}
-
-void util_fstring_from_file(FILE *file, FString *fstring)
-{
-  char current_char = 0;
-  int line_index = 0;
-  int char_index = 0;
-  while(current_char != EOF)
-  {
-    if(line_index > MAX_LINE_SIZE)
-    {
-      LOG("line_index > MAX_LINE_SIZE\n");
-      return;
-    }
-    if(char_index > MAX_STRING_SIZE)
-    {
-      LOG("char_index > MAX_STRING_SIZE\n");
-      return;
-    }
-
-    current_char = fgetc(file);
-
-    fstring->line[line_index].data[char_index] = current_char;
-    char_index += 1;
+  char file_string[MAX_STRING_SIZE] = {0};
+  int file_string_index = 0;
     
-    if(current_char == '\n')
+  int current_char = 0;
+  while((current_char = fgetc(file)) != EOF)
+  {
+    if(file_string_index >= MAX_STRING_SIZE)
     {
-      fstring->line[line_index].size = char_index + 1;
-      line_index += 1;
-      char_index = 0;
+      printf("File size bigger than MAX_STRING_SIZE. Stopping now");
+      break;
     }
+    file_string[file_string_index] = current_char;
+    file_string_index += 1;
   }
-  fstring->size = line_index + 1;
+  file_string[file_string_index - 1] = '\0';
+  UString string = util_string_from_cstr(file_string);
+  
+  return string;
 }
+
+void util_string_chop_left(UString *string, size_t n)
+{
+  string->size -= n;
+  string->data += n;
+}
+
 
 #endif

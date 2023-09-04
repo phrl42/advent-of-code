@@ -14,6 +14,7 @@ typedef struct
 
 
 UString util_string_from_cstr(const char* c_str);
+UString util_string_from_cstr_size(const char* c_str, size_t n);
 UString util_string_from_file(const char* path_to_file);
 
 void util_string_chop_left(UString *string, size_t n);
@@ -36,7 +37,20 @@ UString util_string_from_cstr(const char* c_str)
   string.data = c_str;
   return string;
 }
-
+UString util_string_from_cstr_size(const char* c_str, size_t n)
+{
+  // somehow this trick works
+  char temp[n];
+  for(int i = 0; i < n; i++)
+  {
+    temp[i] = c_str[i];
+  }
+  
+  UString string;
+  string.size = n;
+  string.data = temp;
+  return string;
+}
 UString util_string_from_file(const char* path_to_file)
 {
   FILE *file = fopen(path_to_file, "r");

@@ -31,15 +31,14 @@ UString find_unique_chars(UString string)
       unique_index += 1;
     }
   }
-
   printf("manual printing: \n");
-  for(int i = 0; i <= unique_index; i++)
+  for(int i = 0; i < unique_index; i++)
   {
-    printf("%c", uniques[i]);
+    printf("index %d character: %c", i, uniques[i]);
   }
   printf("\n");
 
-  UString ustring = util_string_from_cstr(uniques);
+  UString ustring = util_string_from_cstr_size(uniques, unique_index);
 
   return ustring;
 }

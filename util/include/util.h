@@ -3,23 +3,25 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 #define MAX_STRING_SIZE 10000
 
+void util_assert(bool condition, const char *msg)
+{
+  if(condition)
+  {
+    printf("%s\n", msg);
+    exit(-1);
+  }
+}
+
 typedef struct
 {
-  const char* data;
+  char* data;
   size_t size;
 } UString;
-
-
-UString util_string_from_cstr(const char* c_str);
-UString util_string_from_cstr_size(const char* c_str, size_t n);
-UString util_string_from_file(const char* path_to_file);
-
-void util_string_chop_left(UString *string, size_t n);
-
-void util_string_print(UString string);
 
 void util_string_print(UString string)
 {
@@ -30,56 +32,58 @@ void util_string_print(UString string)
   printf("\n");
 }
 
-UString util_string_from_cstr(const char* c_str)
+void util_string_from_cstr(UString *string, const char* c_str)
 {
-  UString string;
-  string.size = strlen(c_str);
-  string.data = c_str;
-  return string;
+  size_t size = strlen(c_str);
+  
+  string->data = malloc(sizeof(char) * size);
+  string->size = strlen(c_str);
+
+  for(int i = 0; i < size; i++)
+  {
+    string->data[i] = c_str[i];
+  }
 }
-UString util_string_from_cstr_size(const char* c_str, size_t n)
+
+void util_string_from_cstr_size(UString *string, const char* c_str, size_t n)
 {
-  // somehow this trick works
-  char temp[n];
+  string->size = n;
+  string->data = malloc(sizeof(char) * n);
+
+  util_assert(strlen(c_str) < n, "c_str < n");
+  
   for(int i = 0; i < n; i++)
   {
-    temp[i] = c_str[i];
+    string->data[i] = c_str[i];
   }
-  
-  UString string;
-  string.size = n;
-  string.data = temp;
-  return string;
 }
-UString util_string_from_file(const char* path_to_file)
-{
-  FILE *file = fopen(path_to_file, "r");
 
-  char file_string[MAX_STRING_SIZE] = {0};
-  int file_string_index = 0;
-    
+// temporary solution
+#define MAX_FILE_SIZE 10000
+
+void util_string_from_file(UString *string, const char* path)
+{
+  FILE *file = fopen(path, "r");
+  util_assert(file == NULL, "Could not find file");
+
+  string->data = malloc(sizeof(char) * MAX_FILE_SIZE);
   int current_char = 0;
-  while((current_char = fgetc(file)) != EOF)
+  int i = 0;
+  while(current_char != EOF)
   {
-    if(file_string_index >= MAX_STRING_SIZE)
-    {
-      printf("File size bigger than MAX_STRING_SIZE. Stopping now");
-      break;
-    }
-    file_string[file_string_index] = current_char;
-    file_string_index += 1;
+    current_char = fgetc(file);
+    string->data[i] = current_char;
+    i++;
   }
-  file_string[file_string_index - 1] = '\0';
-  UString string = util_string_from_cstr(file_string);
-  
-  return string;
+  string->size = i-1;
+
+  fclose(file);
 }
 
-void util_string_chop_left(UString *string, size_t n)
+
+void util_string_free(UString *string)
 {
-  string->size -= n;
-  string->data += n;
+  free(string->data);
 }
-
 
 #endif

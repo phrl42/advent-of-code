@@ -3,15 +3,25 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 #define MAX_STRING_SIZE 10000
 
+void util_assert(bool condition, const char *msg)
+{
+  if(condition)
+  {
+    printf("%s\n", msg);
+    exit(-1);
+  }
+}
+
 typedef struct
 {
-  const char* data;
+  char* data;
   size_t size;
 } UString;
-
 
 UString util_string_from_cstr(const char* c_str);
 UString util_string_from_cstr_size(const char* c_str, size_t n);
@@ -20,6 +30,8 @@ UString util_string_from_file(const char* path_to_file);
 void util_string_chop_left(UString *string, size_t n);
 
 void util_string_print(UString string);
+
+void util_string_free(UString *string);
 
 void util_string_print(UString string)
 {
@@ -33,24 +45,33 @@ void util_string_print(UString string)
 UString util_string_from_cstr(const char* c_str)
 {
   UString string;
+
+  string.data = malloc(sizeof(char) * strlen(c_str));
   string.size = strlen(c_str);
-  string.data = c_str;
+  
   return string;
 }
+
 UString util_string_from_cstr_size(const char* c_str, size_t n)
 {
-  // somehow this trick works
-  char temp[n];
+  UString string;
+  bool null_terminator = false;
+ 
+  string.size = n;
+  string.data = malloc(sizeof(char) * (n+1));
+
+  util_assert(strlen(c_str) < n, "c_str < n");
+  
   for(int i = 0; i < n; i++)
   {
-    temp[i] = c_str[i];
+    string.data[i] = c_str[i];
   }
+
+  string.data[n] = '\0'; 
   
-  UString string;
-  string.size = n;
-  string.data = temp;
   return string;
 }
+
 UString util_string_from_file(const char* path_to_file)
 {
   FILE *file = fopen(path_to_file, "r");
@@ -81,5 +102,9 @@ void util_string_chop_left(UString *string, size_t n)
   string->data += n;
 }
 
+void util_string_free(UString *string)
+{
+  free(string);
+}
 
 #endif

@@ -20,7 +20,7 @@ void util_string_print(UString string);
 size_t util_string_line_count(UString string);
 size_t util_string_line_char_count(UString string);
 
-// init funcitons
+// init functions
 void util_string_from_cstr(UString* string, const char* c_str);
 void util_string_from_cstr_size(UString* string, const char* c_str, size_t n);
 void util_string_from_file(UString* string, const char* path);
@@ -81,12 +81,14 @@ size_t util_string_line_char_count(UString string)
 
 void util_string_remove_line(UString *string)
 {
+  printf("before remove\n");
   // also skip newline
   size_t length = util_string_line_char_count(*string) + 1;
   for(size_t i = 0; i < length; i++)
   {
     string->data++;
   }
+  printf("after remove\n");
 }
 void util_string_get_line(UString string, char *dest, size_t n)
 {

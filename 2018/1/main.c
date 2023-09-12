@@ -11,7 +11,6 @@ int main()
   int neg_arr[1000] = {0};
   char line[10] = {0};
 
-  printf("%d\n", util_string_line_count(string));
   for(size_t i = 0; i < util_string_line_count(string); i++)
   {
     util_string_get_line(string, line, 10);

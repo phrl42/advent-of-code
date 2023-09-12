@@ -11,46 +11,48 @@ int main()
   char line[10] = {0};
 
   int length = util_string_line_count(string);
-  for(int i = 0; i <= length; i++)
+
+  bool found = false;
+  int stat = 0;
+  while(!found)
   {
-    util_string_get_line(string, line, 10);
-    if(line[0] == '+')
+    stat += 1;
+    string.data = string.data_bak;
+    printf("iteration: %d\n", stat);
+    for(int i = 0; i <= length; i++)
     {
-      char *data = line;
-      data++;
-      value += atoi(line);
-    }
-    else if(line[0] == '-')
-    {
-      char *data = line;
-      data++;
-      value -= atoi(data);
-    }
-    else
-    {
-      printf("no prefix found\n");
-    }
+      util_string_get_line(string, line, 10);
+      if(line[0] == '+')
+      {
+	char *data = line;
+	data++;
+	value += atoi(line);
+      }
+      else if(line[0] == '-')
+      {
+	char *data = line;
+	data++;
+	value -= atoi(data);
+      }
+      else
+      {
+	printf("no prefix found\n");
+      }
     
-    log[i] = value;
-
-    util_string_remove_line(&string);
-  }
-  int count = 0;
-  for(int j = 0; j <= length; j++)
-  {
-    for(int h = 0; h <= length; h++)
-    {
-      if(log[j] == log[h] && h != j)
+      log[i] = value;
+      for(int j = 0; j <= i; j++)
       {
-	count += 1;
+	for(int h = 0; h <= i; h++)
+	{
+	  if(log[j] == log[h] && h != j)
+	  {
+	    printf("found value twice: %d\n", log[h]);
+	    found = true;
+	  }
+	}
       }
-      if(count == 2)
-      {
-	printf("found value twice: %d\n", log[h]);
-	return 0;
-      }
+      util_string_remove_line(&string);
     }
   }
-
   return 0;
 }

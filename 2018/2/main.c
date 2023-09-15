@@ -1,114 +1,45 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdint.h>
-#define ARR_LENGTH 15000
+#include "util.h"
 
-FILE *file;
+#define LENGTH 100
 
-int8_t array_has_dup(char* arr, size_t count, char dup_char)
+bool array_contains(char *arr, size_t size, char comp)
 {
-  for(int i = 0; i < count; i++)
+  for(size_t i = 0; i < size; i++)
   {
-    if(arr[i] == dup_char)
+    if(arr[i] == comp)
     {
-      return 42;
+      return true;
     }
   }
-  return 0;
+  return false;
 }
 
 int main()
 {
-  file = fopen("list.txt", "r");
-  
-  int filecontents_size = 0;
+  UString string;
 
-  char filecontents[ARR_LENGTH];
-  memset(filecontents, 0, ARR_LENGTH);
+  util_string_from_file(&string, "list.txt");
+
+  char unique[LENGTH] = {0};
+  int unique_index = 0;
   
-  for(int i = 0; i < ARR_LENGTH; i++)
+  char line[LENGTH] = {0};
+
+  for(size_t i = 0; i < util_string_line_count(string); i++)
   {
-    filecontents[i] = fgetc(file);
-    if(filecontents[i] == EOF)
+    util_string_get_line(string, line, LENGTH);
+
+    for(size_t j = 0; j < util_string_line_char_count(string); j++)
     {
-      filecontents[i] = '\0';
-      filecontents_size = i;
-      break;
+      if(!array_contains(unique, LENGTH, line[j]))
+      {
+	unique[unique_index] = line[j];
+	unique_index += 1;
+      }
     }
-    printf("%c", filecontents[i]);
+    util_string_remove_line(&string);
   }
 
-  char unique_chars[filecontents_size];
-  int unique_chars_count = 0;
-
-  memset(unique_chars, 0, filecontents_size);
-
-  for(int i = 0; i < filecontents_size; i++)
-  {
-    if(filecontents[i] == '\n')
-    {
-      continue;
-    }
-
-    if(!array_has_dup(unique_chars, filecontents_size, filecontents[i]))
-    {
-      unique_chars[unique_chars_count] = filecontents[i];
-      unique_chars_count += 1;
-    }
-  }
-  
-  int count_twice = 0;
-  int count_thrice = 0;
-  int pos = 0;
-  int check_pos = 0;
-  while(check_pos < filecontents_size)
-  {
-    int8_t twice_found = 0;
-    int8_t thrice_found = 0;
-    for(int c = 0; c < unique_chars_count; c++)
-    {
-      int dup_count = 0;
-      for(int f = pos; f < filecontents_size; f++)
-      {
-        if(filecontents[f] == '\n')
-        {
-          break;
-        }
-
-        if(unique_chars[c] == filecontents[f])
-        {
-          dup_count += 1;
-        }
-      }
-      if(dup_count == 2 && !twice_found)
-      {
-        twice_found = 1;
-        count_twice += 1;
-      }
-      if(dup_count == 3 && !thrice_found)
-      {
-        thrice_found = 1;
-        count_thrice += 1;
-      }
-    }
-
-    for(int i = pos; i <= filecontents_size; i++)
-    {
-      if(filecontents[i] == '\n')
-      {
-        filecontents[i] = 0;
-        pos = i + 1;
-        break;
-      }
-      else
-      {
-        filecontents[i] = 0;
-      }
-      check_pos += 1;
-    }
-  }
-
-  printf("%d * %d = %d\n", count_twice, count_thrice, count_twice * count_thrice);
-
+  printf("%s\n", unique);
   return 0;
 }

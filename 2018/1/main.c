@@ -38,7 +38,6 @@ int main()
       {
 	printf("no prefix found\n");
       }
-    
       log[i] = value;
       for(int j = 0; j <= i; j++)
       {
@@ -53,6 +52,8 @@ int main()
       }
       util_string_remove_line(&string);
     }
+    printf("%d\n", value);
+    
   }
   return 0;
 }

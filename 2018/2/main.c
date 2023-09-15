@@ -40,6 +40,20 @@ int main()
     util_string_remove_line(&string);
   }
 
+  int count_two = 0;
+  int count_three = 0;
+  
+  for(size_t i = 0; i < util_string_line_count(string); i++)
+  {
+    util_string_get_line(string, line, LENGTH);
+
+    for(size_t j = 0; j < util_string_line_char_count(string); j++)
+    {
+      
+    }
+    util_string_remove_line(&string);
+  }
+
   printf("%s\n", unique);
   return 0;
 }

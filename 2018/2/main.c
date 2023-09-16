@@ -40,18 +40,23 @@ int main()
     util_string_remove_line(&string);
   }
 
-  int count_two = 0;
-  int count_three = 0;
   
-  for(size_t i = 0; i < util_string_line_count(string); i++)
+  for(size_t u = 0; u < unique_index+1; u++)
   {
-    util_string_get_line(string, line, LENGTH);
-
-    for(size_t j = 0; j < util_string_line_char_count(string); j++)
+    for(size_t i = 0; i < util_string_line_count(string); i++)
     {
-      
+      int count = 0;
+      util_string_get_line(string, line, LENGTH);
+
+      for(size_t j = 0; j < util_string_line_char_count(string); j++)
+      {
+	if(line[j] == unique[u])
+	{
+	  count += 1;
+	}
+      }
+      util_string_remove_line(&string);
     }
-    util_string_remove_line(&string);
   }
 
   printf("%s\n", unique);

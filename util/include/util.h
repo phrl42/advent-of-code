@@ -52,7 +52,7 @@ void util_string_print(UString string)
 
 size_t util_string_line_count(UString string)
 {
-  size_t count = 0;
+  size_t count = 1;
 
   for(size_t i = 0; i < string.size; i++)
   {
@@ -67,7 +67,7 @@ size_t util_string_line_count(UString string)
 
 size_t util_string_line_char_count(UString string)
 {
-  size_t count = 0;
+  size_t count = 1;
 
   while(string.data[count] != '\n')
   {

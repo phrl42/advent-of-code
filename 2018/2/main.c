@@ -50,7 +50,7 @@ int main()
   printf("%s\n", unique);
   line_count = util_string_line_count(string);
   
-  for(size_t i = 0; i <= line_count; i++)
+  for(size_t i = 0; i < line_count; i++)
   {
     bool two_done = false;
     bool three_done = false;

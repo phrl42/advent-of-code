@@ -2,18 +2,6 @@
 
 #define LENGTH 400
 
-bool array_contains(char *arr, size_t size, char comp)
-{
-  for(size_t i = 0; i < size; i++)
-  {
-    if(arr[i] == comp)
-    {
-      return true;
-    }
-  }
-  return false;
-}
-
 int main()
 {
   UString file_string;

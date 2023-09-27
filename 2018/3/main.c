@@ -54,6 +54,7 @@ int main()
   int w = 0;
   int h = 0;
 
+  size_t count = 0;
   for(size_t i = 0; i < line_count; i++)
   {
     // X
@@ -69,6 +70,7 @@ int main()
       string[i].data++;
     }
     x = atoi(current_value_string);
+
     // Y
 
     string[i].data++;
@@ -113,10 +115,23 @@ int main()
     h = atoi(current_value_string);
 
 
-    printf("[%d] X: %d | Y: %d | W: %d | H: %d\n", i, x, y, w, h);
+    //printf("[%d] X: %d | Y: %d | W: %d | H: %d\n", i, x, y, w, h);
+
+    for(size_t cx = 0; cx < w; cx++)
+    {
+      for(size_t cy = 0; cy < h; cy++)
+      {
+	if(space[x+cx][y+cy] == 1)
+	{
+	  count += 1;
+	}
+	space[x+cx][y+cy] += 1;
+      }
+    }
+
   }
 
-  
+
   for(size_t i = 0; i < line_count; i++)
   {
     util_string_free(&string[i]);

@@ -209,7 +209,7 @@ int main()
 {
 
   UString file_string;
-  util_string_from_file(&file_string, "test.txt");
+  util_string_from_file(&file_string, "list.txt");
 
   // put file into string arr
   UString string[LENGTH];
@@ -272,7 +272,7 @@ int main()
     for(size_t j = 0; j < line_count; j++)
     {
       UString temp = string[i];
-      if(get_hour(string[i]) > get_hour(string[j]) && get_minute(string[i]) < get_minute(string[j]) && i != j && get_month(string[i]) == get_month(string[j]) && get_day(string[i]) == get_day(string[j]))
+      if(get_hour(string[i]) > get_hour(string[j]) && i != j && get_month(string[i]) == get_month(string[j]) && get_day(string[i]) == get_day(string[j]))
       {
 	string[i] = string[j];
 	string[j] = temp;
@@ -280,6 +280,10 @@ int main()
     }
   }
 
+  for(size_t i = 0; i < line_count; i++)
+  {
+    util_string_print(string[i]);
+  }
   Guard guards[SIZE] = {Guard_default};
   size_t guard_index = 0;
 
@@ -338,6 +342,10 @@ int main()
   int highest_slept_index = 0;
   for(size_t i = 0; i < SIZE; i++)
   {
+    if(guards[i].start_size != guards[i].end_size)
+    {
+      printf("bunker will explode\n");
+    }
     if(guards[i].slept_minutes > highest_slept_minutes)
     {
       highest_slept_minutes = guards[i].slept_minutes;
@@ -347,9 +355,10 @@ int main()
   }
 
   // get most sleepiest minute
-  for(size_t i = 0; i < guards[highest_slept_index].start_size; i++)
+  int start_size = guards[highest_slept_index].start_size;
+  for(size_t i = 0; i < start_size; i++)
   {
-    for(size_t j = 0; j < guards[highest_slept_index].start_size; j++)
+    for(size_t j = 0; j < start_size; j++)
     {
       for(size_t s = guards[highest_slept_index].start_times[i]; s < guards[highest_slept_index].end_times[i]; s++)
       {

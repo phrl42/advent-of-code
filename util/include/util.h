@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 #define MAX_STRING_SIZE 10000
 
@@ -29,6 +30,7 @@ void util_string_from_file(UString* string, const char* path);
 // edit functions
 void util_string_remove_line(UString *string);
 void util_string_get_line(UString string, char *dest, size_t n);
+void util_string_remove_index(UString *string, size_t index);
 
 // deinit functions
 void util_string_free(UString *string);
@@ -73,6 +75,23 @@ size_t util_string_line_count(UString string)
   }
 
   return count;
+}
+
+void util_string_remove_index(UString *string, size_t index)
+{
+  string->data[index] = ' ';
+  string->size -= 1; 
+  // move everything to the left
+  for(size_t i = index; i < string->size; i++)
+  {
+    string->data[i] = string->data[i+1];
+  }
+  char *new_location = malloc(sizeof(char) * string->size);
+  memmove(new_location, string->data, sizeof(char) * string->size);
+ 
+  free(string->data_bak);
+  string->data = new_location;
+  string->data_bak = new_location;
 }
 
 size_t util_string_line_char_count(UString string)

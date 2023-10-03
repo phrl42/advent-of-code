@@ -137,20 +137,13 @@ size_t get_day(UString line)
 size_t get_hour(UString line)
 {
   char current_value[3] = {0};
-  // skip year
-  while(line.data[0] != '-')
+  // go till month
+  while(line.data[0] != ' ')
   {
     line.data++;
   }
   line.data++;
-    
-  // skip day
-  while(line.data[0] != '-')
-  {
-    line.data++;
-  }
-  line.data++;
-
+  
   current_value[0] = line.data[0];
   current_value[1] = line.data[1];
 
@@ -259,7 +252,7 @@ int main()
     for(size_t j = 0; j < line_count; j++)
     {
       UString temp = string[i];
-      if(get_minute(string[i]) < get_minute(string[j]) && i != j && get_month(string[i]) == get_month(string[j]) && get_day(string[i]) == get_day(string[j]))
+      if(get_hour(string[i]) < get_hour(string[j]) && i != j && get_month(string[i]) == get_month(string[j]) && get_day(string[i]) == get_day(string[j]))
       {
 	string[i] = string[j];
 	string[j] = temp;
@@ -272,13 +265,14 @@ int main()
     for(size_t j = 0; j < line_count; j++)
     {
       UString temp = string[i];
-      if(get_hour(string[i]) > get_hour(string[j]) && i != j && get_month(string[i]) == get_month(string[j]) && get_day(string[i]) == get_day(string[j]))
+      if(get_minute(string[i]) < get_minute(string[j]) && get_hour(string[i]) == get_hour(string[j]) && i != j && get_month(string[i]) == get_month(string[j]) && get_day(string[i]) == get_day(string[j]))
       {
 	string[i] = string[j];
 	string[j] = temp;
       }
     }
   }
+
 
   for(size_t i = 0; i < line_count; i++)
   {
@@ -344,7 +338,7 @@ int main()
   {
     if(guards[i].start_size != guards[i].end_size)
     {
-      printf("bunker will explode\n");
+      printf("sorting went wrong\n");
     }
     if(guards[i].slept_minutes > highest_slept_minutes)
     {

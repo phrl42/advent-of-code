@@ -19,6 +19,7 @@ typedef struct
 void util_string_print(UString string);
 size_t util_string_line_count(UString string);
 size_t util_string_line_char_count(UString string);
+void util_string_save_to_file(UString string, const char* file_name);
 
 // init functions
 void util_string_from_cstr(UString* string, const char* c_str);
@@ -48,6 +49,15 @@ void util_string_print(UString string)
     printf("%c", string.data[i]);
   }
   printf("\n");
+}
+
+void util_string_save_to_file(UString string, const char* file_name)
+{
+  FILE *file;
+  file = fopen(file_name, "w");
+
+  fprintf(file, "%s\n", string.data);
+  fclose(file);
 }
 
 size_t util_string_line_count(UString string)

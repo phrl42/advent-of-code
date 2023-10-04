@@ -76,7 +76,7 @@ size_t util_string_line_count(UString string)
 
   return count;
 }
-
+/*
 void util_string_remove_index(UString *string, size_t index)
 {
   string->data[index] = ' ';
@@ -92,6 +92,18 @@ void util_string_remove_index(UString *string, size_t index)
   free(string->data_bak);
   string->data = new_location;
   string->data_bak = new_location;
+}
+*/
+void util_string_remove_index(UString *string, size_t index)
+{
+  string->data[index] = ' ';
+  string->size -= 1; 
+  // move everything to the left
+  for(size_t i = index; i < string->size; i++)
+  {
+    string->data[i] = string->data[i+1];
+  }
+  string->data[string->size] = '\0';
 }
 
 size_t util_string_line_char_count(UString string)

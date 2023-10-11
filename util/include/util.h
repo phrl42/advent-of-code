@@ -21,6 +21,7 @@ void util_string_print(UString string);
 size_t util_string_line_count(UString string);
 size_t util_string_line_char_count(UString string);
 void util_string_save_to_file(UString string, const char* file_name);
+void util_string_separate_by_line(UString string, UString string_arr[], size_t n);
 
 // init functions
 void util_string_from_cstr(UString* string, const char* c_str);
@@ -60,6 +61,17 @@ void util_string_save_to_file(UString string, const char* file_name)
 
   fprintf(file, "%s\n", string.data);
   fclose(file);
+}
+
+void util_string_separate_by_line(UString string, UString string_arr[], size_t n)
+{
+  char line[MAX_STRING_SIZE];
+  for(size_t i = 0; i < n; i++)
+  {
+    util_string_get_line(string, line, MAX_STRING_SIZE);
+    util_string_from_cstr(&string_arr[i], line);
+    util_string_remove_line(&string);
+  }
 }
 
 size_t util_string_line_count(UString string)
